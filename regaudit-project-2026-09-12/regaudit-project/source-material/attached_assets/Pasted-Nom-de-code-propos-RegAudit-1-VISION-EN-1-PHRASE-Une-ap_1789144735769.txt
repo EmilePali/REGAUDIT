@@ -1,0 +1,90 @@
+Nom de code proposé : **RegAudit**
+
+### 1. VISION EN 1 PHRASE
+Une application mobile ultra-simple (type Duolingo pour mutuelles) qui forme le personnel administratif à ne plus jamais rater un contrôle AIRMS.
+
+### 2. CONTEXTE RÉGLEMENTAIRE À INTÉGRER
+L'app doit se baser sur les 3 missions officielles de l'AIRMS que tu m'as données :
+- **Agrément :** Vérification de la pertinence, cohérence et régularité juridique
+- **Registre :** Immatriculation et mise à jour obligatoire
+- **Contrôle :** Surveillance financière, solvabilité, fonctionnement + sanctions jusqu'au retrait + appel au Fonds National de Garantie
+
+C'est ça qui fera la valeur de l'app.
+
+### 3. PUBLIC CIBLE - USER FRIENDLY POUR TOUTE HIÉRARCHIE
+- Agent d'accueil, Secrétaire, Comptable, Gestionnaire, Gérant / DG
+- Niveau : BEPC à Master, parfois faible connexion internet
+- Contrainte : Doit fonctionner en 3 clics maximum. Pas de jargon technique.
+
+### 4. ARCHITECTURE - 3 MODULES PRINCIPAUX + 1 DASHBOARD
+
+
+
+
+**DASHBOARD D'ACCUEIL (Très simple)**
+- Barre de progression : "Vous êtes à 60% prêt pour l'audit AIRMS"
+- 3 grosses tuiles colorées (drapeau de la cote d’ivoire-orange –blanc -vert) : [1. Apprendre] [2. Simuler] [3. Manager]
+- Mode hors-ligne, audio en français facile + Anglais en option
+
+**MODULE 1 : FORMATION AUDIT & CONTRÔLE AIRMS (8 micro-modules de 10 min)**
+Objectif : Comprendre ce que l'AIRMS va vérifier.
+1. Dossier d'agrément parfait - Checklist
+2. Registre national : quoi déclarer et quand ?
+3. Gouvernance : PV d'AG, Conseil d'Administration
+4. Solvabilité : Ratio cotisations/prestations expliqué simplement
+5. Trésorerie et pièces comptables exigées
+6. Gestion des adhérents et des plaintes
+7. Mesures conservatoires : comment les éviter
+8. Le Fonds National de Garantie : quand intervient-il ?
+*Format : Vidéo 3 min + fiche mémo + Quiz interactif 5 questions + Exercice "Trouve l'erreur dans ce dossier"*
+
+**MODULE 2 : PRÉPARATION AUDIT - SIMULATIONS CAS D'ÉCOLE (Le coeur de l'app)**
+Objectif : S'entraîner comme si l'auditeur était là.
+- **Simulateur 1 : L'Auditeur arrive.** L'app joue l'auditeur AIRMS. "Montrez-moi votre registre". L'utilisateur doit uploader / cocher les bons documents.
+- **Simulateur 2 : Alerte Solvabilité.** Cas : Votre mutuelle a dépensé 90% des cotisations. Que faites-vous en 3 étapes ?
+- **Simulateur 3 : Dossier incomplet.** On montre un dossier d'agrément avec 3 erreurs. L'utilisateur doit les corriger.
+- **Simulateur 4 : Rapport de contrôle.** L'utilisateur reçoit un faux rapport avec recommandations et doit faire son plan de redressement en 48h.
+*Résultat : Score /100 + attestation "Prêt pour contrôle AIRMS"*
+
+**MODULE 3 : MANAGEMENT & LEADERSHIP (4 micro-modules)**
+Objectif : Améliorer le fonctionnement interne pour ne plus être sanctionné.
+1. Organiser son équipe administrative
+2. Accueil et fidélisation des adhérents
+3. Leadership en situation de crise (retard de remboursement)
+4. Communication avec le Conseil d'Administration
+*Format : Scénario interactif type WhatsApp. "Votre comptable est absent le jour de l'audit, que dites-vous ?"*
+
+### 5. FONCTIONNALITÉS TRANSVERSES OBLIGATOIRES (User Friendly)
+- Connexion par numéro de téléphone uniquement
+- Mode sombre/clair, très grosses icônes
+- Progression sauvegardée automatiquement
+- Certificat final téléchargeable (comme ceux qu'on vient de faire APEX SKY)
+- Bouton "Appeler un expert AIRMS" (lien WhatsApp)
+- Langue : Français simple
+
+### 6. STACK TECHNIQUE RECOMMANDÉ POUR 1 MOIS
+- **Format : PWA (Progressive Web App)** - Pas besoin de Play Store, s'installe comme une app
+- Frontend : React / FlutterFlow (rapide)
+- Backend : Firebase (authentification, base de données)
+- Contenu : Vidéos hébergées YouTube non répertoriées
+- Coût dev : Faible
+
+### 7. PLANNING 1 MOIS - 4 SEMAINES
+
+**Semaine 1 : Contenu & Maquette**
+J1-J3 : Finalisation des 8+4 modules avec un expert AIRMS
+J4-J7 : Maquette Figma ultra-simple + validation avec 2 gérants de mutuelles
+
+**Semaine 2 : Développement Coeur**
+Dev Dashboard + Module 1 avec quiz
+
+**Semaine 3 : Simulateur**
+Dev Module 2 (les 4 simulations) + Module 3 Management
+
+**Semaine 4 : Tests & Déploiement**
+Test sur 3 mutuelles réelles à Abidjan, corrections, formation des formateurs, livraison PWA + QR Code
+
+### 8. LIVRABLES ATTENDUS
+- PWA installable sur Android/iPhone
+- Back-office admin pour APEX SKY pour voir la progression des mutuelles
+- 12 vidéos courtes + 30 quiz

@@ -1,0 +1,2148 @@
+{
+  "schemaVersion": "1.0",
+  "product": "RegAudit",
+  "contentStatus": "draft_to_validate",
+  "language": "fr",
+  "validationNote": "Les éléments réglementaires doivent être validés par le référent AIRMS avant publication.",
+  "scoring": {
+    "maxScore": 100,
+    "criteriaPerSimulation": 5,
+    "criterionMaxPoints": 20,
+    "partialCreditFactor": 0.5,
+    "passScore": 80,
+    "levels": [
+      {
+        "id": "needs_review",
+        "label": "À reprendre",
+        "minScore": 0,
+        "maxScore": 59
+      },
+      {
+        "id": "progressing",
+        "label": "En progrès",
+        "minScore": 60,
+        "maxScore": 79
+      },
+      {
+        "id": "ready",
+        "label": "Prêt pour l’exercice",
+        "minScore": 80,
+        "maxScore": 89
+      },
+      {
+        "id": "rigorous_mastery",
+        "label": "Maîtrise rigoureuse",
+        "minScore": 90,
+        "maxScore": 100
+      }
+    ],
+    "criticalErrorPolicy": {
+      "maximumScoreAfterCriticalError": 59,
+      "requiresFeedbackReview": true,
+      "errors": [
+        {
+          "id": "invent_information",
+          "label": "Inventer une pièce, une information ou une transmission"
+        },
+        {
+          "id": "hide_anomaly",
+          "label": "Cacher volontairement une anomalie à l’auditeur"
+        },
+        {
+          "id": "present_unvalidated_rule",
+          "label": "Présenter une information non validée comme une obligation officielle"
+        },
+        {
+          "id": "exceed_role",
+          "label": "Prendre une décision hors de son rôle alors qu’une escalade est nécessaire"
+        },
+        {
+          "id": "alter_evidence",
+          "label": "Supprimer ou modifier une preuve pour faire disparaître un écart"
+        },
+        {
+          "id": "privacy_breach",
+          "label": "Divulguer une donnée personnelle à une personne non autorisée"
+        }
+      ]
+    },
+    "questionScoring": {
+      "mode": "action_based",
+      "awardActionOnce": true,
+      "pointsSource": "criteria.actions.points",
+      "unselectedActionsScoreZero": true,
+      "feedbackRequired": true
+    },
+    "globalMastery": {
+      "requiredSuccessfulSimulations": 8,
+      "totalSimulations": 10,
+      "minimumScoreOnRemainingSimulations": 60
+    }
+  },
+  "simulations": [
+    {
+      "id": "sim-01-auditeur-arrive",
+      "number": 1,
+      "title": "L’auditeur arrive",
+      "category": "audit",
+      "estimatedMinutes": 10,
+      "regulatoryValidationRequired": true,
+      "interactionModel": "step_by_step",
+      "questions": [
+        {
+          "id": "q1-posture-accueil",
+          "order": 1,
+          "type": "single_choice",
+          "criterionId": "welcome_posture",
+          "prompt": "Un auditeur se présente à l’accueil et demande à voir le registre. Quelle est votre première réaction ?",
+          "options": [
+            {
+              "id": "q1-best",
+              "label": "Je l’accueille, je me présente, puis je préviens le responsable désigné.",
+              "actionIds": ["greet", "identify_role", "notify_manager"],
+              "isRecommended": true,
+              "feedback": "Bonne réaction : l’accueil est professionnel et le responsable est informé immédiatement."
+            },
+            {
+              "id": "q1-welcome-only",
+              "label": "Je l’accueille et je lui demande de patienter sans prévenir personne.",
+              "actionIds": ["greet"],
+              "feedback": "L’accueil est correct, mais le responsable doit être prévenu sans attendre."
+            },
+            {
+              "id": "q1-direct-doc",
+              "label": "Je lui remets tous les documents disponibles pour gagner du temps.",
+              "actionIds": [],
+              "feedback": "Il faut d’abord identifier la demande et éviter de remettre des documents non vérifiés ou inutiles."
+            }
+          ]
+        },
+        {
+          "id": "q2-selection-pieces",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "document_selection",
+          "prompt": "L’auditeur demande le registre. Quelle préparation est la plus rigoureuse ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "Je présente le registre demandé, j’utilise la checklist et je garde les documents hors sujet de côté.",
+              "actionIds": ["present_register", "use_checklist", "exclude_irrelevant"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : la réponse est ciblée, contrôlée et organisée."
+            },
+            {
+              "id": "q2-register-only",
+              "label": "Je présente le premier registre trouvé sans consulter la checklist.",
+              "actionIds": ["present_register"],
+              "feedback": "Le bon document est peut-être présenté, mais la checklist permet de vérifier qu’il est complet et pertinent."
+            },
+            {
+              "id": "q2-all-documents",
+              "label": "Je remets le registre ainsi que tous les documents présents dans le bureau.",
+              "actionIds": ["present_register"],
+              "feedback": "Présenter des documents hors sujet peut créer de la confusion. Il faut préparer uniquement les pièces utiles."
+            }
+          ]
+        },
+        {
+          "id": "q3-version-documents",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "version_check",
+          "prompt": "Deux versions du registre sont disponibles. Que faites-vous avant de le présenter ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "Je vérifie les dates ou versions, puis je signale l’ancienne version au responsable au lieu de la présenter comme actuelle.",
+              "actionIds": ["check_dates", "flag_obsolete"],
+              "isRecommended": true,
+              "feedback": "Bonne pratique : la version présentée doit être identifiable et l’ancienne version doit être signalée."
+            },
+            {
+              "id": "q3-latest-looking",
+              "label": "Je choisis le document qui semble le plus récent.",
+              "actionIds": [],
+              "feedback": "L’apparence ne suffit pas. Il faut vérifier la date ou la version du document."
+            },
+            {
+              "id": "q3-both",
+              "label": "Je présente les deux versions sans explication.",
+              "actionIds": [],
+              "feedback": "Présenter deux versions sans les distinguer peut créer une confusion. Vérifiez laquelle est actuelle et signalez l’autre."
+            }
+          ]
+        },
+        {
+          "id": "q4-reponse-factuelle",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "factual_response",
+          "prompt": "L’auditeur demande une preuve de mise à jour que vous ne trouvez pas immédiatement. Quelle réponse donnez-vous ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je donne uniquement les informations vérifiées, je signale que la preuve n’est pas retrouvée et je m’engage à vérifier avec le responsable.",
+              "actionIds": ["use_verified_information", "declare_missing_document", "avoid_invention"],
+              "isRecommended": true,
+              "feedback": "Bonne réponse : elle est honnête, factuelle et ouvre une action de vérification."
+            },
+            {
+              "id": "q4-partial",
+              "label": "Je dis que la preuve existe probablement et je demande un délai pour vérifier.",
+              "actionIds": ["declare_missing_document"],
+              "feedback": "Vous demandez un délai, mais évitez de présenter comme certaine une information qui n’est pas vérifiée."
+            },
+            {
+              "id": "q4-invent",
+              "label": "Je confirme que la preuve a été transmise, même si je ne l’ai pas retrouvée.",
+              "actionIds": [],
+              "criticalErrorId": "invent_information",
+              "feedback": "Erreur critique : il ne faut jamais confirmer une transmission ou inventer une pièce non vérifiée."
+            }
+          ]
+        },
+        {
+          "id": "q5-tracabilite-escalade",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "traceability_escalation",
+          "prompt": "Après l’échange, quelle action clôt correctement la situation ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "Je note la demande, j’attribue le suivi au responsable concerné et j’escalade ce qui dépasse mon rôle.",
+              "actionIds": ["record_request", "assign_followup", "escalate_if_needed"],
+              "isRecommended": true,
+              "feedback": "Bonne clôture : la demande est tracée, suivie et orientée vers la bonne personne."
+            },
+            {
+              "id": "q5-note-only",
+              "label": "Je note la demande sur un papier pour y revenir plus tard.",
+              "actionIds": ["record_request"],
+              "feedback": "La demande est notée, mais elle doit aussi être attribuée et suivie dans un support identifiable."
+            },
+            {
+              "id": "q5-handle-alone",
+              "label": "Je garde la demande pour moi et je répondrai directement quand j’aurai le temps.",
+              "actionIds": [],
+              "feedback": "Une demande d’audit ne doit pas rester sans responsable ni suivi, surtout si elle dépasse votre rôle."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "welcome_posture",
+          "label": "Accueil et posture",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "greet", "label": "Saluer et accueillir correctement", "points": 8 },
+            { "id": "identify_role", "label": "Se présenter ou identifier son rôle", "points": 6 },
+            { "id": "notify_manager", "label": "Prévenir le responsable désigné", "points": 6 }
+          ]
+        },
+        {
+          "id": "document_selection",
+          "label": "Sélection des pièces",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "present_register", "label": "Présenter le registre demandé", "points": 8 },
+            { "id": "use_checklist", "label": "Utiliser la checklist de préparation", "points": 6 },
+            { "id": "exclude_irrelevant", "label": "Ne pas remettre de document sans rapport", "points": 6 }
+          ]
+        },
+        {
+          "id": "version_check",
+          "label": "Vérification des versions",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "check_dates", "label": "Vérifier la date ou version de chaque pièce", "points": 10 },
+            { "id": "flag_obsolete", "label": "Écarter ou signaler une pièce obsolète", "points": 10 }
+          ]
+        },
+        {
+          "id": "factual_response",
+          "label": "Réponse factuelle",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "use_verified_information", "label": "Répondre avec une information vérifiée", "points": 10 },
+            { "id": "declare_missing_document", "label": "Signaler clairement une pièce manquante", "points": 5 },
+            { "id": "avoid_invention", "label": "Ne rien inventer", "points": 5, "criticalErrorId": "invent_information" }
+          ]
+        },
+        {
+          "id": "traceability_escalation",
+          "label": "Traçabilité et escalade",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "record_request", "label": "Noter la demande de l’auditeur", "points": 8 },
+            { "id": "assign_followup", "label": "Attribuer le suivi à une personne", "points": 6 },
+            { "id": "escalate_if_needed", "label": "Escalader si la réponse dépasse son rôle", "points": 6 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sim-02-alerte-solvabilite",
+      "number": 2,
+      "title": "Alerte solvabilité",
+      "category": "financial_control",
+      "estimatedMinutes": 10,
+      "regulatoryValidationRequired": true,
+      "scenarioNote": "Le seuil de 90 % est un cas pédagogique à valider ; il ne doit pas être présenté comme une règle officielle sans confirmation.",
+      "interactionModel": "step_by_step",
+      "questions": [
+        {
+          "id": "q1-comprendre-alerte",
+          "order": 1,
+          "type": "single_choice",
+          "criterionId": "alert_understanding",
+          "prompt": "Le tableau de suivi indique que les prestations représentent 90 % des cotisations sur une période donnée. Que faut-il comprendre ?",
+          "options": [
+            {
+              "id": "q1-best",
+              "label": "C’est un signal à analyser avec les données de la période ; ce chiffre ne suffit pas à conclure à lui seul.",
+              "actionIds": ["identify_signal", "treat_threshold_as_case", "avoid_premature_conclusion"],
+              "isRecommended": true,
+              "feedback": "Bonne démarche : le chiffre déclenche une vérification, mais ne permet pas à lui seul de tirer une conclusion réglementaire."
+            },
+            {
+              "id": "q1-partial",
+              "label": "Je relève le signal et je demande à vérifier les données avant de conclure.",
+              "actionIds": ["identify_signal", "avoid_premature_conclusion"],
+              "feedback": "La prudence est bonne. Il faut aussi comprendre que le seuil présenté est un cas pédagogique à analyser, pas une règle automatique."
+            },
+            {
+              "id": "q1-critical",
+              "label": "90 % signifie automatiquement que la mutuelle est en infraction.",
+              "actionIds": ["identify_signal"],
+              "criticalErrorId": "present_unvalidated_rule",
+              "feedback": "Erreur critique : un cas pédagogique ne doit pas être présenté comme une obligation ou une conclusion officielle sans validation."
+            }
+          ]
+        },
+        {
+          "id": "q2-verifier-donnees",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "data_verification",
+          "prompt": "Avant de recommander une action, quelles vérifications sont prioritaires ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "Je vérifie la période, je compare les cotisations et prestations, puis je demande les justificatifs manquants.",
+              "actionIds": ["check_period", "compare_contributions_benefits", "request_missing_data"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : la situation est vérifiée avec les bonnes données avant toute décision."
+            },
+            {
+              "id": "q2-partial",
+              "label": "Je compare les cotisations et prestations, mais je ne vérifie pas encore la période.",
+              "actionIds": ["compare_contributions_benefits"],
+              "feedback": "La comparaison est utile, mais elle doit être rattachée à une période précise et documentée."
+            },
+            {
+              "id": "q2-insufficient",
+              "label": "Je demande simplement au comptable si tout va bien.",
+              "actionIds": [],
+              "feedback": "Il faut une vérification documentée : période, données comparées et justificatifs disponibles."
+            }
+          ]
+        },
+        {
+          "id": "q3-actions-prioritaires",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "priority_actions",
+          "prompt": "Quelle première séquence d’actions est la plus rigoureuse ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "Je lance l’analyse, je propose un suivi documenté et je laisse toute décision sensible au responsable habilité.",
+              "actionIds": ["start_analysis", "propose_followup", "avoid_unauthorized_decision"],
+              "isRecommended": true,
+              "feedback": "Bonne séquence : analyser, organiser le suivi et respecter le niveau de décision."
+            },
+            {
+              "id": "q3-partial",
+              "label": "Je lance l’analyse et je propose une action de suivi, puis je verrai ensuite qui doit décider.",
+              "actionIds": ["start_analysis", "propose_followup"],
+              "feedback": "Les deux premières étapes sont correctes. Le niveau de décision doit être clarifié avant toute mesure sensible."
+            },
+            {
+              "id": "q3-critical",
+              "label": "Je réduis immédiatement les remboursements sans consulter la direction.",
+              "actionIds": ["start_analysis"],
+              "criticalErrorId": "exceed_role",
+              "feedback": "Erreur critique : une décision sensible ne doit pas être prise hors du rôle ou sans validation appropriée."
+            }
+          ]
+        },
+        {
+          "id": "q4-informer-responsables",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "responsible_notification",
+          "prompt": "Comment présenter l’alerte à la direction ou au responsable financier ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je transmets les faits vérifiés, j’informe le responsable concerné et je précise l’urgence de l’analyse.",
+              "actionIds": ["notify_finance_manager", "present_facts", "state_urgency"],
+              "isRecommended": true,
+              "feedback": "Bonne présentation : elle permet au responsable de décider à partir de faits et d’un niveau d’urgence clair."
+            },
+            {
+              "id": "q4-partial",
+              "label": "Je préviens la direction en disant seulement que la situation est préoccupante.",
+              "actionIds": ["notify_finance_manager"],
+              "feedback": "La direction est informée, mais elle a besoin des faits vérifiés et du niveau d’urgence pour agir."
+            },
+            {
+              "id": "q4-rumeur",
+              "label": "Je dis à l’équipe que la mutuelle est probablement en difficulté afin de les alerter.",
+              "actionIds": [],
+              "feedback": "Une alerte doit être transmise au bon responsable avec des faits vérifiés, pas diffusée comme une rumeur."
+            }
+          ]
+        },
+        {
+          "id": "q5-organiser-suivi",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "followup",
+          "prompt": "Quelle clôture permet de suivre sérieusement l’alerte ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "Je crée une action avec un responsable, je fixe une échéance et je conserve les données utilisées pour l’analyse.",
+              "actionIds": ["create_action", "set_deadline", "retain_analysis_data"],
+              "isRecommended": true,
+              "feedback": "Bonne clôture : l’alerte devient une action suivie et vérifiable."
+            },
+            {
+              "id": "q5-partial",
+              "label": "Je note l’alerte et je demande au responsable de regarder le dossier quand il pourra.",
+              "actionIds": ["create_action"],
+              "feedback": "L’action est identifiée, mais elle doit avoir une échéance et conserver les données qui justifient son ouverture."
+            },
+            {
+              "id": "q5-no-trace",
+              "label": "Je surveille les chiffres de mon côté sans créer de suivi formel.",
+              "actionIds": [],
+              "feedback": "Sans responsable, échéance et données conservées, l’alerte risque de ne pas être traitée."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "alert_understanding",
+          "label": "Compréhension de l’alerte",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "identify_signal", "label": "Identifier le signal financier", "points": 8 },
+            { "id": "treat_threshold_as_case", "label": "Comprendre que 90 % est un cas à vérifier et non une règle automatique", "points": 6 },
+            { "id": "avoid_premature_conclusion", "label": "Ne pas conclure sans données complètes", "points": 6, "criticalErrorId": "present_unvalidated_rule" }
+          ]
+        },
+        {
+          "id": "data_verification",
+          "label": "Vérification des données",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "check_period", "label": "Vérifier la période concernée", "points": 6 },
+            { "id": "compare_contributions_benefits", "label": "Comparer cotisations et prestations", "points": 7 },
+            { "id": "request_missing_data", "label": "Demander les données ou justificatifs manquants", "points": 7 }
+          ]
+        },
+        {
+          "id": "priority_actions",
+          "label": "Actions prioritaires",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "start_analysis", "label": "Choisir une analyse immédiate", "points": 7 },
+            { "id": "propose_followup", "label": "Proposer une mesure de suivi documentée", "points": 7 },
+            { "id": "avoid_unauthorized_decision", "label": "Éviter une décision précipitée non autorisée", "points": 6, "criticalErrorId": "exceed_role" }
+          ]
+        },
+        {
+          "id": "responsible_notification",
+          "label": "Information des responsables",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "notify_finance_manager", "label": "Prévenir le responsable financier ou la direction", "points": 8 },
+            { "id": "present_facts", "label": "Présenter les faits et non une rumeur", "points": 6 },
+            { "id": "state_urgency", "label": "Préciser le niveau d’urgence", "points": 6 }
+          ]
+        },
+        {
+          "id": "followup",
+          "label": "Suivi",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "create_action", "label": "Créer une action avec responsable", "points": 7 },
+            { "id": "set_deadline", "label": "Définir une échéance", "points": 6 },
+            { "id": "retain_analysis_data", "label": "Conserver les données ayant servi à l’analyse", "points": 7 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sim-03-dossier-incomplet",
+      "number": 3,
+      "title": "Dossier incomplet",
+      "category": "accreditation",
+      "estimatedMinutes": 10,
+      "regulatoryValidationRequired": true,
+      "interactionModel": "step_by_step",
+      "scenarioNote": "Les trois erreurs du dossier sont fictives et doivent être remplacées ou validées par le référent réglementaire.",
+      "questions": [
+        {
+          "id": "q1-reperer-erreurs",
+          "order": 1,
+          "type": "multi_select",
+          "criterionId": "error_detection",
+          "selectionMode": "each_option",
+          "minSelections": 1,
+          "maxSelections": 3,
+          "prompt": "Le dossier d’agrément contient plusieurs problèmes. Sélectionnez les trois erreurs à traiter.",
+          "options": [
+            {
+              "id": "q1-error-1",
+              "label": "La pièce d’identité du responsable n’est pas jointe au dossier.",
+              "actionIds": ["find_error_1"],
+              "feedback": "Cette pièce manquante doit être signalée et ajoutée avant la transmission, sous réserve de validation du contenu réglementaire."
+            },
+            {
+              "id": "q1-error-2",
+              "label": "Le nom du responsable n’est pas le même dans le formulaire et dans le procès-verbal.",
+              "actionIds": ["find_error_2"],
+              "feedback": "Cette incohérence entre deux documents doit être vérifiée et corrigée."
+            },
+            {
+              "id": "q1-error-3",
+              "label": "Le document financier présenté ne correspond pas à la période demandée.",
+              "actionIds": ["find_error_3"],
+              "feedback": "La période du document financier doit correspondre à la période du dossier."
+            },
+            {
+              "id": "q1-distractor",
+              "label": "Le dossier contient une page imprimée en noir et blanc.",
+              "actionIds": [],
+              "feedback": "Ce détail n’est pas, à lui seul, une erreur du dossier dans ce scénario."
+            }
+          ]
+        },
+        {
+          "id": "q2-associer-risques",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "risk_association",
+          "prompt": "Après avoir repéré les erreurs, comment associer correctement les risques ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "Pièce manquante : dossier incomplet ; nom différent : incohérence à clarifier ; mauvaise période : information financière non adaptée au dossier.",
+              "actionIds": ["link_risk_1", "link_risk_2", "link_risk_3"],
+              "isRecommended": true,
+              "feedback": "Bonne analyse : chaque erreur est reliée à un risque distinct et compréhensible."
+            },
+            {
+              "id": "q2-two-risks",
+              "label": "Pièce manquante : dossier incomplet ; nom différent : incohérence à clarifier, mais je ne traite pas encore la période financière.",
+              "actionIds": ["link_risk_1", "link_risk_2"],
+              "feedback": "Deux risques sont correctement identifiés. La période du document financier doit également être reliée à son risque."
+            },
+            {
+              "id": "q2-generic",
+              "label": "Les trois erreurs présentent simplement le même risque : dossier incomplet.",
+              "actionIds": ["link_risk_1"],
+              "feedback": "Le dossier est incomplet, mais il faut distinguer la pièce absente, l’incohérence et la mauvaise période pour choisir les bonnes corrections."
+            }
+          ]
+        },
+        {
+          "id": "q3-choisir-corrections",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "corrections",
+          "prompt": "Quelle combinaison de corrections est la plus rigoureuse ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "Ajouter la pièce manquante, harmoniser le nom après vérification et remplacer le document financier par celui de la bonne période.",
+              "actionIds": ["correct_error_1", "correct_error_2", "correct_error_3"],
+              "isRecommended": true,
+              "feedback": "Bonne combinaison : chaque erreur reçoit une correction adaptée et vérifiable."
+            },
+            {
+              "id": "q3-two-corrections",
+              "label": "Ajouter la pièce manquante et harmoniser le nom, mais conserver le document financier pour éviter de retarder le dossier.",
+              "actionIds": ["correct_error_1", "correct_error_2"],
+              "feedback": "Deux corrections sont pertinentes, mais un document couvrant la mauvaise période ne doit pas être conservé comme pièce adaptée."
+            },
+            {
+              "id": "q3-hide-error",
+              "label": "Retirer la page qui montre l’incohérence et transmettre le dossier avec les autres pièces.",
+              "actionIds": [],
+              "criticalErrorId": "alter_evidence",
+              "feedback": "Erreur critique : une incohérence doit être corrigée et tracée, jamais masquée ou supprimée."
+            }
+          ]
+        },
+        {
+          "id": "q4-dossier-retour",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "return_package",
+          "prompt": "Comment organiser le dossier de retour après identification des erreurs ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je joins les pièces ou informations corrigées, j’attribue chaque correction au bon responsable et je conserve la preuve des changements.",
+              "actionIds": ["add_required_items", "assign_correction", "keep_correction_proof"],
+              "isRecommended": true,
+              "feedback": "Bonne organisation : le dossier corrigé est complet, chaque action a un responsable et les changements restent traçables."
+            },
+            {
+              "id": "q4-no-owner",
+              "label": "Je joins les pièces corrigées et je laisse l’équipe décider ensuite qui était responsable.",
+              "actionIds": ["add_required_items", "keep_correction_proof"],
+              "feedback": "Les pièces sont ajoutées et conservées, mais la responsabilité doit être attribuée avant la transmission."
+            },
+            {
+              "id": "q4-send-fast",
+              "label": "Je transmets les pièces disponibles et je compléterai le dossier si l’auditeur le demande.",
+              "actionIds": [],
+              "feedback": "Le dossier doit être vérifié et complété avant transmission, autant que possible."
+            }
+          ]
+        },
+        {
+          "id": "q5-controle-final",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "final_check",
+          "prompt": "Quelle vérification finale permet de transmettre le dossier avec rigueur ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "Je relis toute la checklist, je vérifie la cohérence entre les documents et je fais valider le dossier avant transmission.",
+              "actionIds": ["review_checklist", "check_consistency", "obtain_validation"],
+              "isRecommended": true,
+              "feedback": "Bonne clôture : la checklist, la cohérence et la validation finale sont toutes couvertes."
+            },
+            {
+              "id": "q5-two-checks",
+              "label": "Je relis la checklist et je vérifie la cohérence, mais je transmets sans validation supplémentaire.",
+              "actionIds": ["review_checklist", "check_consistency"],
+              "feedback": "Les contrôles sont bons, mais une validation finale doit être obtenue selon l’organisation retenue."
+            },
+            {
+              "id": "q5-visual-check",
+              "label": "Je vérifie rapidement que le dossier contient beaucoup de pages.",
+              "actionIds": [],
+              "feedback": "Le nombre de pages ne garantit ni la complétude ni la cohérence du dossier."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "error_detection",
+          "label": "Repérage des erreurs",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "find_error_1", "label": "Trouver la première erreur", "points": 7 },
+            { "id": "find_error_2", "label": "Trouver la deuxième erreur", "points": 7 },
+            { "id": "find_error_3", "label": "Trouver la troisième erreur", "points": 6 }
+          ]
+        },
+        {
+          "id": "risk_association",
+          "label": "Association erreur / risque",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "link_risk_1", "label": "Associer la première erreur à son risque", "points": 7 },
+            { "id": "link_risk_2", "label": "Associer la deuxième erreur à son risque", "points": 7 },
+            { "id": "link_risk_3", "label": "Associer la troisième erreur à son risque", "points": 6 }
+          ]
+        },
+        {
+          "id": "corrections",
+          "label": "Corrections",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "correct_error_1", "label": "Choisir la correction de la première erreur", "points": 7 },
+            { "id": "correct_error_2", "label": "Choisir la correction de la deuxième erreur", "points": 7 },
+            { "id": "correct_error_3", "label": "Choisir la correction de la troisième erreur", "points": 6 }
+          ]
+        },
+        {
+          "id": "return_package",
+          "label": "Dossier de retour",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "add_required_items", "label": "Ajouter les pièces ou informations demandées", "points": 8 },
+            { "id": "assign_correction", "label": "Identifier la personne qui doit corriger", "points": 6 },
+            { "id": "keep_correction_proof", "label": "Garder la preuve de la correction", "points": 6 }
+          ]
+        },
+        {
+          "id": "final_check",
+          "label": "Contrôle final",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "review_checklist", "label": "Relire la checklist complète", "points": 7 },
+            { "id": "check_consistency", "label": "Vérifier la cohérence entre les documents", "points": 7 },
+            { "id": "obtain_validation", "label": "Obtenir une validation avant transmission", "points": 6 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sim-04-rapport-controle",
+      "number": 4,
+      "title": "Rapport de contrôle",
+      "category": "audit",
+      "estimatedMinutes": 12,
+      "regulatoryValidationRequired": true,
+      "scenarioNote": "Le délai de 48 heures est une contrainte pédagogique à confirmer avant toute formulation réglementaire.",
+      "interactionModel": "step_by_step",
+      "questions": [
+        {
+          "id": "q1-lire-rapport",
+          "order": 1,
+          "type": "single_choice",
+          "criterionId": "report_reading",
+          "prompt": "Vous recevez un faux rapport de contrôle. Quelle est la première méthode de lecture ?",
+          "options": [
+            {
+              "id": "q1-best",
+              "label": "Je relève les recommandations, je distingue les constats des actions demandées et je note les points à clarifier.",
+              "actionIds": ["identify_recommendations", "separate_finding_recommendation", "flag_clarification"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : le rapport est compris avant d’être transformé en plan d’action."
+            },
+            {
+              "id": "q1-partial",
+              "label": "Je relève les recommandations et je commence immédiatement à les exécuter.",
+              "actionIds": ["identify_recommendations"],
+              "feedback": "Les recommandations sont repérées, mais il faut d’abord distinguer les constats et clarifier les points ambigus."
+            },
+            {
+              "id": "q1-surface",
+              "label": "Je lis uniquement la dernière page pour connaître la conclusion.",
+              "actionIds": [],
+              "feedback": "La conclusion ne suffit pas : les constats, recommandations et points à clarifier doivent être analysés."
+            }
+          ]
+        },
+        {
+          "id": "q2-prioriser-risques",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "prioritization",
+          "prompt": "Comment prioriser les recommandations du rapport ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "Je traite d’abord l’action la plus urgente et le risque le plus important, puis je sépare les actions urgentes des améliorations souhaitables.",
+              "actionIds": ["rank_urgent_action", "identify_highest_risk", "separate_urgent_desirable"],
+              "isRecommended": true,
+              "feedback": "Bonne priorisation : elle évite de traiter toutes les recommandations au même niveau."
+            },
+            {
+              "id": "q2-partial",
+              "label": "Je commence par les actions les plus faciles à réaliser, puis je traiterai les risques importants.",
+              "actionIds": ["separate_urgent_desirable"],
+              "feedback": "La facilité d’exécution ne doit pas remplacer l’analyse de l’urgence et du risque."
+            },
+            {
+              "id": "q2-volume",
+              "label": "Je commence par la recommandation qui comporte le plus de lignes dans le rapport.",
+              "actionIds": [],
+              "feedback": "La longueur d’une recommandation ne mesure ni son urgence ni son niveau de risque."
+            }
+          ]
+        },
+        {
+          "id": "q3-attribuer-responsabilites",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "responsibility_assignment",
+          "prompt": "Comment répartir les actions du plan de redressement ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "J’attribue chaque action au rôle qui peut réellement la réaliser, j’évite les responsabilités impossibles et je nomme un coordinateur.",
+              "actionIds": ["assign_correct_role", "avoid_impossible_assignment", "name_coordinator"],
+              "isRecommended": true,
+              "feedback": "Bonne organisation : chaque action a un responsable adapté et une coordination identifiable."
+            },
+            {
+              "id": "q3-partial",
+              "label": "Je répartis les actions entre les membres de l’équipe, mais je ne désigne pas de coordinateur.",
+              "actionIds": ["assign_correct_role"],
+              "feedback": "La répartition est commencée, mais sans coordinateur le suivi global risque d’être perdu."
+            },
+            {
+              "id": "q3-director-does-all",
+              "label": "Je donne toutes les actions au directeur afin qu’il soit le seul responsable.",
+              "actionIds": [],
+              "criticalErrorId": "exceed_role",
+              "feedback": "Une responsabilité globale ne signifie pas que la direction doit réaliser toutes les actions opérationnelles."
+            }
+          ]
+        },
+        {
+          "id": "q4-fixer-echeances",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "deadlines",
+          "prompt": "Le scénario mentionne une contrainte de 48 heures. Comment construire les échéances ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je fixe une date pour chaque action, je tiens compte des dépendances et je signale les délais irréalistes au responsable.",
+              "actionIds": ["set_action_date", "consider_dependencies", "flag_unrealistic_deadline"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : la contrainte du scénario est prise en compte sans être présentée comme une règle officielle non validée."
+            },
+            {
+              "id": "q4-48-everything",
+              "label": "Je donne 48 heures à toutes les actions, sans vérifier si elles dépendent d’une autre.",
+              "actionIds": ["set_action_date"],
+              "feedback": "Une échéance unique ne tient pas compte de la complexité ni des dépendances entre actions."
+            },
+            {
+              "id": "q4-no-date",
+              "label": "Je laisse les responsables choisir leurs dates plus tard.",
+              "actionIds": [],
+              "feedback": "Chaque action doit avoir une échéance pour pouvoir être suivie."
+            }
+          ]
+        },
+        {
+          "id": "q5-plan-redressement",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "remediation_plan",
+          "prompt": "Que doit contenir le plan de redressement final ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "Pour chaque recommandation, je décris l’action, je définis la preuve attendue et je prévois une revue par la direction.",
+              "actionIds": ["describe_action", "define_evidence", "schedule_management_review"],
+              "isRecommended": true,
+              "feedback": "Bonne structure : l’action est concrète, vérifiable et suivie par la direction."
+            },
+            {
+              "id": "q5-action-only",
+              "label": "Je liste les actions à faire, sans préciser les preuves attendues.",
+              "actionIds": ["describe_action"],
+              "feedback": "Une liste d’actions est un début, mais il faut définir comment prouver qu’elles sont réalisées."
+            },
+            {
+              "id": "q5-promise",
+              "label": "Je rédige une promesse générale d’amélioration sans détailler les actions.",
+              "actionIds": [],
+              "feedback": "Une promesse générale ne permet ni l’exécution ni le contrôle du redressement."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "report_reading",
+          "label": "Lecture",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "identify_recommendations", "label": "Identifier les recommandations du rapport", "points": 8 },
+            { "id": "separate_finding_recommendation", "label": "Distinguer un constat d’une recommandation", "points": 6 },
+            { "id": "flag_clarification", "label": "Repérer les informations à clarifier", "points": 6 }
+          ]
+        },
+        {
+          "id": "prioritization",
+          "label": "Priorisation",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "rank_urgent_action", "label": "Classer l’action la plus urgente", "points": 8 },
+            { "id": "identify_highest_risk", "label": "Identifier le risque le plus important", "points": 6 },
+            { "id": "separate_urgent_desirable", "label": "Distinguer l’urgent du simplement souhaitable", "points": 6 }
+          ]
+        },
+        {
+          "id": "responsibility_assignment",
+          "label": "Responsabilités",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "assign_correct_role", "label": "Attribuer chaque action au bon rôle", "points": 8 },
+            { "id": "avoid_impossible_assignment", "label": "Ne pas attribuer une action sans accord ou capacité", "points": 6 },
+            { "id": "name_coordinator", "label": "Désigner un responsable de coordination", "points": 6 }
+          ]
+        },
+        {
+          "id": "deadlines",
+          "label": "Échéances",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "set_action_date", "label": "Fixer une date pour chaque action", "points": 7 },
+            { "id": "consider_dependencies", "label": "Tenir compte des dépendances", "points": 6 },
+            { "id": "flag_unrealistic_deadline", "label": "Signaler une échéance irréaliste", "points": 7 }
+          ]
+        },
+        {
+          "id": "remediation_plan",
+          "label": "Plan de redressement",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "describe_action", "label": "Décrire l’action à réaliser", "points": 7 },
+            { "id": "define_evidence", "label": "Préciser la preuve attendue", "points": 7 },
+            { "id": "schedule_management_review", "label": "Prévoir une revue par la direction", "points": 6 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sim-05-verification-registre",
+      "number": 5,
+      "title": "Vérification du registre",
+      "category": "registry",
+      "estimatedMinutes": 10,
+      "regulatoryValidationRequired": true,
+      "interactionModel": "step_by_step",
+      "scenarioNote": "Les changements et justificatifs utilisés dans ce scénario sont fictifs et doivent être alignés sur les exigences officiellement validées.",
+      "questions": [
+        {
+          "id": "q1-reperer-changements",
+          "order": 1,
+          "type": "multi_select",
+          "criterionId": "change_detection",
+          "selectionMode": "each_option",
+          "minSelections": 1,
+          "maxSelections": 3,
+          "prompt": "Depuis la dernière mise à jour, quelles informations doivent être vérifiées dans le registre ?",
+          "options": [
+            {
+              "id": "q1-manager-change",
+              "label": "Le responsable de la mutuelle a changé.",
+              "actionIds": ["detect_manager_change"],
+              "feedback": "Ce changement doit être vérifié et traité selon la procédure validée."
+            },
+            {
+              "id": "q1-admin-change",
+              "label": "L’adresse administrative de la mutuelle a changé.",
+              "actionIds": ["detect_admin_change"],
+              "feedback": "Une information administrative modifiée doit être comparée au registre et à ses justificatifs."
+            },
+            {
+              "id": "q1-other-change",
+              "label": "Le contact téléphonique utilisé par la mutuelle a changé.",
+              "actionIds": ["detect_other_change"],
+              "feedback": "Ce changement doit être inclus dans la vérification du scénario."
+            },
+            {
+              "id": "q1-distractor",
+              "label": "La couleur des classeurs utilisés au secrétariat a changé.",
+              "actionIds": [],
+              "feedback": "Ce changement interne n’est pas une information du registre dans ce scénario."
+            }
+          ]
+        },
+        {
+          "id": "q2-justificatifs",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "supporting_documents",
+          "prompt": "Comment préparer les justificatifs des changements repérés ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "J’associe la pièce adaptée à chaque changement et je signale toute pièce insuffisante avant de poursuivre.",
+              "actionIds": ["match_support_1", "match_support_2", "flag_insufficient_support"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : chaque information est soutenue par la bonne pièce et les insuffisances sont visibles."
+            },
+            {
+              "id": "q2-two-supports",
+              "label": "J’associe les deux premières pièces, mais je conserve un justificatif incomplet pour le troisième changement.",
+              "actionIds": ["match_support_1", "match_support_2"],
+              "feedback": "Les deux associations sont correctes, mais un justificatif incomplet doit être signalé et traité."
+            },
+            {
+              "id": "q2-any-document",
+              "label": "Je joins n’importe quel document portant le nom de la mutuelle.",
+              "actionIds": [],
+              "feedback": "Un document doit justifier précisément le changement concerné ; son simple intitulé ne suffit pas."
+            }
+          ]
+        },
+        {
+          "id": "q3-responsabilites",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "responsibility",
+          "prompt": "Comment répartir le traitement d’une mise à jour du registre ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "J’identifie la personne qui prépare le dossier, celle qui le valide et celle qui suit la déclaration.",
+              "actionIds": ["identify_preparer", "identify_validator", "identify_declaration_owner"],
+              "isRecommended": true,
+              "feedback": "Bonne organisation : la préparation, la validation et le suivi sont attribués clairement."
+            },
+            {
+              "id": "q3-two-roles",
+              "label": "Je désigne la personne qui prépare le dossier et celle qui le valide, mais pas le responsable du suivi.",
+              "actionIds": ["identify_preparer", "identify_validator"],
+              "feedback": "La préparation et la validation sont définies, mais le suivi de la déclaration doit également être attribué."
+            },
+            {
+              "id": "q3-everyone",
+              "label": "Toute l’équipe est responsable de la mise à jour, sans désigner de personne précise.",
+              "actionIds": [],
+              "feedback": "Une responsabilité collective sans personne identifiée rend le suivi difficile et non vérifiable."
+            }
+          ]
+        },
+        {
+          "id": "q4-verifier-mise-a-jour",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "update_check",
+          "prompt": "Quelle vérification effectuer avant de considérer le registre comme à jour ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je compare les informations entre les documents, je vérifie la date de mise à jour et je recherche les anciennes informations restantes.",
+              "actionIds": ["check_consistency", "check_update_date", "find_old_information"],
+              "isRecommended": true,
+              "feedback": "Bonne vérification : les informations, la date et les anciennes versions sont contrôlées."
+            },
+            {
+              "id": "q4-date-only",
+              "label": "Je vérifie uniquement que le document porte une date récente.",
+              "actionIds": ["check_update_date"],
+              "feedback": "Une date récente ne garantit pas que toutes les informations concordent ni qu’une ancienne donnée n’est pas restée dans le dossier."
+            },
+            {
+              "id": "q4-trust-message",
+              "label": "Je considère le registre à jour parce que le responsable me dit qu’il a été modifié.",
+              "actionIds": [],
+              "feedback": "La mise à jour doit être vérifiée dans les documents et accompagnée d’une preuve."
+            }
+          ]
+        },
+        {
+          "id": "q5-preuves-archivage",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "evidence_archiving",
+          "prompt": "Comment clôturer correctement la mise à jour du registre ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "J’enregistre la date de l’action, je conserve la preuve de transmission ou de dépôt et je classe la version finale.",
+              "actionIds": ["record_action_date", "keep_submission_proof", "archive_final_version"],
+              "isRecommended": true,
+              "feedback": "Bonne clôture : la mutuelle peut retrouver quand l’action a été faite, avec quelle preuve et quelle version finale."
+            },
+            {
+              "id": "q5-two-actions",
+              "label": "Je conserve la preuve de transmission et je classe la version finale, sans noter la date de l’action.",
+              "actionIds": ["keep_submission_proof", "archive_final_version"],
+              "feedback": "Les pièces sont conservées, mais la date de l’action doit également être enregistrée."
+            },
+            {
+              "id": "q5-verbal",
+              "label": "Je confirme oralement au responsable que la mise à jour est terminée.",
+              "actionIds": [],
+              "feedback": "Une confirmation orale ne remplace pas la preuve de transmission et l’archivage de la version finale."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "change_detection",
+          "label": "Changements à repérer",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "detect_manager_change", "label": "Identifier le changement de responsable", "points": 7 },
+            { "id": "detect_admin_change", "label": "Identifier le changement d’adresse ou d’information administrative", "points": 7 },
+            { "id": "detect_other_change", "label": "Repérer toute autre modification signalée dans le cas", "points": 6 }
+          ]
+        },
+        {
+          "id": "supporting_documents",
+          "label": "Justificatifs",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "match_support_1", "label": "Associer la bonne pièce au premier changement", "points": 7 },
+            { "id": "match_support_2", "label": "Associer la bonne pièce au deuxième changement", "points": 7 },
+            { "id": "flag_insufficient_support", "label": "Signaler une pièce insuffisante", "points": 6 }
+          ]
+        },
+        {
+          "id": "responsibility",
+          "label": "Responsabilité",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "identify_preparer", "label": "Identifier qui prépare le dossier", "points": 6 },
+            { "id": "identify_validator", "label": "Identifier qui valide", "points": 7 },
+            { "id": "identify_declaration_owner", "label": "Identifier qui effectue ou suit la déclaration", "points": 7 }
+          ]
+        },
+        {
+          "id": "update_check",
+          "label": "Vérification",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "check_consistency", "label": "Contrôler que les informations concordent", "points": 7 },
+            { "id": "check_update_date", "label": "Vérifier la date de mise à jour", "points": 6 },
+            { "id": "find_old_information", "label": "Repérer une information encore ancienne", "points": 7 }
+          ]
+        },
+        {
+          "id": "evidence_archiving",
+          "label": "Preuve et archivage",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "record_action_date", "label": "Enregistrer la date d’action", "points": 6 },
+            { "id": "keep_submission_proof", "label": "Conserver la preuve de transmission ou de dépôt", "points": 8 },
+            { "id": "archive_final_version", "label": "Classer la version finale", "points": 6 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sim-06-gouvernance-pv",
+      "number": 6,
+      "title": "Gouvernance et procès-verbaux",
+      "category": "governance",
+      "estimatedMinutes": 10,
+      "regulatoryValidationRequired": true,
+      "interactionModel": "step_by_step",
+      "scenarioNote": "Les pièces, périodes et validations utilisées dans ce scénario sont fictives et doivent être alignées sur les exigences officiellement validées.",
+      "questions": [
+        {
+          "id": "q1-selection-pv",
+          "order": 1,
+          "type": "single_choice",
+          "criterionId": "minutes_selection",
+          "prompt": "L’auditeur demande les documents de gouvernance de la période contrôlée. Quelle sélection est la plus rigoureuse ?",
+          "options": [
+            {
+              "id": "q1-best",
+              "label": "Je sélectionne le PV d’Assemblée Générale et celui du Conseil d’Administration de la bonne période, et j’écarte le document hors période.",
+              "actionIds": ["select_general_assembly", "select_board", "exclude_wrong_period"],
+              "isRecommended": true,
+              "feedback": "Bonne sélection : les deux instances sont couvertes et les documents hors période sont écartés."
+            },
+            {
+              "id": "q1-two-documents",
+              "label": "Je sélectionne les deux types de procès-verbaux, mais je joins aussi un document d’une ancienne période.",
+              "actionIds": ["select_general_assembly", "select_board"],
+              "feedback": "Les bons types de documents sont sélectionnés, mais le document hors période doit être séparé ou clairement identifié."
+            },
+            {
+              "id": "q1-one-document",
+              "label": "Je transmets uniquement le procès-verbal qui semble le plus récent.",
+              "actionIds": [],
+              "feedback": "La gouvernance doit être vérifiée avec les documents pertinents des deux instances et de la période concernée."
+            }
+          ]
+        },
+        {
+          "id": "q2-dates-periodes",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "dates_periods",
+          "prompt": "Quelles vérifications effectuer sur les dates des procès-verbaux ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "Je vérifie la date de chaque réunion, la période couverte et je recherche une chronologie impossible entre les documents.",
+              "actionIds": ["check_meeting_date", "check_covered_period", "find_impossible_timeline"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : les dates sont contrôlées séparément et comparées entre elles."
+            },
+            {
+              "id": "q2-two-checks",
+              "label": "Je vérifie les dates de réunion et la période couverte, mais je ne compare pas la chronologie globale.",
+              "actionIds": ["check_meeting_date", "check_covered_period"],
+              "feedback": "Les dates principales sont contrôlées, mais leur ordre doit aussi être vérifié pour détecter une incohérence."
+            },
+            {
+              "id": "q2-file-date",
+              "label": "Je me fie uniquement à la date de création du fichier numérique.",
+              "actionIds": [],
+              "feedback": "La date du fichier ne remplace pas la vérification de la date de réunion et de la période couverte."
+            }
+          ]
+        },
+        {
+          "id": "q3-signatures-decisions",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "signatures_decisions",
+          "prompt": "Que faut-il vérifier dans le contenu des procès-verbaux ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "Je vérifie les signatures attendues, la lisibilité des décisions et je signale toute validation manquante.",
+              "actionIds": ["check_signatures", "check_decisions", "flag_missing_validation"],
+              "isRecommended": true,
+              "feedback": "Bonne vérification : l’authentification du document, son contenu et les validations sont contrôlés."
+            },
+            {
+              "id": "q3-two-checks",
+              "label": "Je vérifie les signatures et les décisions, mais je ne signale pas l’absence d’une validation.",
+              "actionIds": ["check_signatures", "check_decisions"],
+              "feedback": "Les deux contrôles sont utiles, mais une validation manquante doit être signalée pour être corrigée."
+            },
+            {
+              "id": "q3-signature-only",
+              "label": "Je vérifie seulement qu’une signature apparaît sur chaque page.",
+              "actionIds": ["check_signatures"],
+              "feedback": "La présence d’une signature ne suffit pas : les décisions et validations doivent aussi être lisibles et cohérentes."
+            }
+          ]
+        },
+        {
+          "id": "q4-incoherence",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "inconsistency",
+          "prompt": "Le nom du président n’est pas le même dans deux procès-verbaux. Que faites-vous ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je relève l’incohérence et j’explique qu’elle doit être clarifiée avant de présenter les documents comme cohérents.",
+              "actionIds": ["find_inconsistency", "explain_inconsistency"],
+              "isRecommended": true,
+              "feedback": "Bonne réaction : l’écart est identifié et présenté clairement sans être masqué."
+            },
+            {
+              "id": "q4-find-only",
+              "label": "Je remarque la différence, mais je transmets les documents sans explication.",
+              "actionIds": ["find_inconsistency"],
+              "feedback": "L’incohérence est repérée, mais elle doit être expliquée et orientée vers une clarification."
+            },
+            {
+              "id": "q4-ignore",
+              "label": "Je choisis le nom qui apparaît le plus souvent et je ne signale pas la différence.",
+              "actionIds": [],
+              "criticalErrorId": "hide_anomaly",
+              "feedback": "Erreur critique : une incohérence entre des documents ne doit pas être ignorée ou masquée."
+            }
+          ]
+        },
+        {
+          "id": "q5-correction-gouvernance",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "correction",
+          "prompt": "Après avoir identifié l’incohérence, comment assurer son traitement ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "J’informe le responsable compétent, je demande la pièce ou correction adaptée et je conserve la trace du traitement.",
+              "actionIds": ["notify_owner", "request_correction", "record_treatment"],
+              "isRecommended": true,
+              "feedback": "Bonne suite : l’écart est confié au bon responsable, corrigé et documenté."
+            },
+            {
+              "id": "q5-two-actions",
+              "label": "J’informe le responsable et je demande une correction, mais je ne trace pas la suite.",
+              "actionIds": ["notify_owner", "request_correction"],
+              "feedback": "La correction est demandée, mais sans trace il sera difficile de prouver le suivi."
+            },
+            {
+              "id": "q5-verbal",
+              "label": "Je demande oralement à un collègue de remplacer le document.",
+              "actionIds": [],
+              "feedback": "Une correction de gouvernance doit être attribuée et conservée avec une trace vérifiable."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "minutes_selection",
+          "label": "Sélection des PV",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "select_general_assembly", "label": "Choisir le PV d’Assemblée Générale pertinent", "points": 7 },
+            { "id": "select_board", "label": "Choisir le PV du Conseil d’Administration pertinent", "points": 7 },
+            { "id": "exclude_wrong_period", "label": "Écarter un document hors période", "points": 6 }
+          ]
+        },
+        {
+          "id": "dates_periods",
+          "label": "Dates et périodes",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "check_meeting_date", "label": "Vérifier la date de réunion", "points": 7 },
+            { "id": "check_covered_period", "label": "Vérifier la période couverte", "points": 6 },
+            { "id": "find_impossible_timeline", "label": "Repérer une chronologie impossible", "points": 7 }
+          ]
+        },
+        {
+          "id": "signatures_decisions",
+          "label": "Signatures et décisions",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "check_signatures", "label": "Vérifier les signatures attendues", "points": 7 },
+            { "id": "check_decisions", "label": "Vérifier que les décisions sont lisibles", "points": 6 },
+            { "id": "flag_missing_validation", "label": "Signaler une validation manquante", "points": 7 }
+          ]
+        },
+        {
+          "id": "inconsistency",
+          "label": "Incohérences",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "find_inconsistency", "label": "Repérer l’incohérence entre deux documents", "points": 10 },
+            { "id": "explain_inconsistency", "label": "Expliquer simplement pourquoi elle pose question", "points": 10 }
+          ]
+        },
+        {
+          "id": "correction",
+          "label": "Correction",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "notify_owner", "label": "Informer le responsable compétent", "points": 6 },
+            { "id": "request_correction", "label": "Demander la pièce ou correction adaptée", "points": 7 },
+            { "id": "record_treatment", "label": "Conserver la trace du traitement", "points": 7 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sim-07-tresorerie-pieces",
+      "number": 7,
+      "title": "Trésorerie et pièces comptables",
+      "category": "accounting",
+      "estimatedMinutes": 12,
+      "regulatoryValidationRequired": true,
+      "interactionModel": "step_by_step",
+      "scenarioNote": "Les opérations, montants et justificatifs utilisés dans ce scénario sont fictifs et doivent être alignés sur les règles comptables et réglementaires validées.",
+      "questions": [
+        {
+          "id": "q1-rapprochement",
+          "order": 1,
+          "type": "single_choice",
+          "criterionId": "reconciliation",
+          "prompt": "Vous devez vérifier une opération de trésorerie. Quelle méthode est la plus rigoureuse ?",
+          "options": [
+            {
+              "id": "q1-best",
+              "label": "Je relie l’opération à la bonne pièce, je vérifie le montant et je compare la date ou la référence.",
+              "actionIds": ["match_transaction_document", "check_amount", "check_date_reference"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : l’opération est rapprochée avec une pièce précise et les informations essentielles sont comparées."
+            },
+            {
+              "id": "q1-two-checks",
+              "label": "Je vérifie le montant et la date, mais je ne recherche pas encore la pièce correspondante.",
+              "actionIds": ["check_amount", "check_date_reference"],
+              "feedback": "Les données sont comparées, mais le rapprochement doit aussi relier l’opération à son justificatif."
+            },
+            {
+              "id": "q1-balance-only",
+              "label": "Je vérifie seulement que le solde général semble correct.",
+              "actionIds": [],
+              "feedback": "Un solde global ne permet pas de vérifier chaque opération ni sa pièce justificative."
+            }
+          ]
+        },
+        {
+          "id": "q2-identifier-ecart",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "discrepancy",
+          "prompt": "Le montant d’une opération ne correspond pas à son justificatif. Que faites-vous ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "J’identifie l’écart, je vérifie s’il s’agit d’une erreur, d’une pièce absente ou d’une opération à clarifier, sans modifier les preuves.",
+              "actionIds": ["identify_main_gap", "classify_gap", "avoid_unproved_correction"],
+              "isRecommended": true,
+              "feedback": "Bonne démarche : l’écart est décrit avant toute correction et les preuves restent intactes."
+            },
+            {
+              "id": "q2-two-actions",
+              "label": "J’identifie l’écart et je cherche à savoir s’il s’agit d’une erreur ou d’une pièce absente, mais je corrige directement le montant.",
+              "actionIds": ["identify_main_gap", "classify_gap"],
+              "feedback": "L’analyse est correcte, mais une modification ne doit pas être faite sans preuve et validation."
+            },
+            {
+              "id": "q2-alter-proof",
+              "label": "Je remplace le montant sur la copie pour qu’il corresponde au justificatif.",
+              "actionIds": [],
+              "criticalErrorId": "alter_evidence",
+              "feedback": "Erreur critique : une preuve ne doit jamais être modifiée pour faire disparaître un écart."
+            }
+          ]
+        },
+        {
+          "id": "q3-pieces-manquantes",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "missing_documents",
+          "prompt": "Une opération n’a pas de justificatif complet. Quelle demande formuler ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "Je liste précisément les pièces manquantes, je les demande à la personne responsable et je fixe une date de retour.",
+              "actionIds": ["list_missing_items", "request_from_owner", "set_return_deadline"],
+              "isRecommended": true,
+              "feedback": "Bonne demande : elle est précise, adressée au bon interlocuteur et accompagnée d’une échéance."
+            },
+            {
+              "id": "q3-two-actions",
+              "label": "Je liste les pièces manquantes et je les demande au comptable, sans fixer de date.",
+              "actionIds": ["list_missing_items", "request_from_owner"],
+              "feedback": "La demande est bien orientée, mais une échéance permet de suivre le retour."
+            },
+            {
+              "id": "q3-vague",
+              "label": "Je demande au service comptable de compléter le dossier dès que possible.",
+              "actionIds": [],
+              "feedback": "La demande doit préciser les pièces attendues, la personne responsable et la date de retour."
+            }
+          ]
+        },
+        {
+          "id": "q4-prioriser-ecarts",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "priority",
+          "prompt": "Plusieurs écarts sont détectés. Comment les traiter ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je traite d’abord l’écart à risque élevé, j’explique cette priorité et je sépare les corrections immédiates des vérifications complémentaires.",
+              "actionIds": ["treat_high_risk_gap", "justify_priority", "separate_correction_checks"],
+              "isRecommended": true,
+              "feedback": "Bonne priorisation : les risques importants sont traités en premier sans confondre correction et analyse complémentaire."
+            },
+            {
+              "id": "q4-easiest",
+              "label": "Je commence par l’écart le plus facile à corriger, même s’il n’est pas le plus risqué.",
+              "actionIds": ["separate_correction_checks"],
+              "feedback": "Il faut prioriser le risque avant la facilité d’exécution."
+            },
+            {
+              "id": "q4-all-same",
+              "label": "Je traite tous les écarts dans l’ordre où je les ai trouvés, sans les classer.",
+              "actionIds": [],
+              "feedback": "Les écarts doivent être classés afin que les risques importants ne soient pas retardés."
+            }
+          ]
+        },
+        {
+          "id": "q5-piste-audit",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "audit_trail",
+          "prompt": "Une correction est finalement effectuée. Comment clôturer l’opération ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "J’enregistre la correction, je conserve les preuves avant et après si nécessaire et je fais valider la clôture.",
+              "actionIds": ["record_correction", "keep_evidence_history", "validate_closure"],
+              "isRecommended": true,
+              "feedback": "Bonne clôture : la correction est traçable, l’historique est conservé et la fin du traitement est validée."
+            },
+            {
+              "id": "q5-two-actions",
+              "label": "J’enregistre la correction et je conserve la nouvelle preuve, sans faire valider la clôture.",
+              "actionIds": ["record_correction", "keep_evidence_history"],
+              "feedback": "La correction est documentée, mais la clôture doit être validée selon le circuit prévu."
+            },
+            {
+              "id": "q5-verbal",
+              "label": "Je confirme oralement que l’écart est réglé et je supprime l’ancienne pièce.",
+              "actionIds": [],
+              "criticalErrorId": "alter_evidence",
+              "feedback": "Erreur critique : l’historique des preuves doit être conservé et la clôture doit être documentée."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "reconciliation",
+          "label": "Rapprochement",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "match_transaction_document", "label": "Relier l’opération à la bonne pièce", "points": 8 },
+            { "id": "check_amount", "label": "Vérifier le montant", "points": 6 },
+            { "id": "check_date_reference", "label": "Vérifier la date ou la référence", "points": 6 }
+          ]
+        },
+        {
+          "id": "discrepancy",
+          "label": "Écart",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "identify_main_gap", "label": "Identifier l’écart principal", "points": 8 },
+            { "id": "classify_gap", "label": "Distinguer erreur, absence de pièce et opération à clarifier", "points": 6 },
+            { "id": "avoid_unproved_correction", "label": "Ne pas corriger sans preuve", "points": 6, "criticalErrorId": "alter_evidence" }
+          ]
+        },
+        {
+          "id": "missing_documents",
+          "label": "Pièces manquantes",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "list_missing_items", "label": "Lister précisément les pièces à demander", "points": 8 },
+            { "id": "request_from_owner", "label": "Demander à la bonne personne", "points": 6 },
+            { "id": "set_return_deadline", "label": "Fixer une échéance de retour", "points": 6 }
+          ]
+        },
+        {
+          "id": "priority",
+          "label": "Priorité",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "treat_high_risk_gap", "label": "Traiter d’abord l’écart à risque élevé", "points": 8 },
+            { "id": "justify_priority", "label": "Justifier la priorité", "points": 6 },
+            { "id": "separate_correction_checks", "label": "Distinguer corrections immédiates et contrôles complémentaires", "points": 6 }
+          ]
+        },
+        {
+          "id": "audit_trail",
+          "label": "Piste d’audit",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "record_correction", "label": "Enregistrer la correction effectuée", "points": 7 },
+            { "id": "keep_evidence_history", "label": "Conserver l’ancienne et la nouvelle preuve si nécessaire", "points": 7 },
+            { "id": "validate_closure", "label": "Faire valider la clôture", "points": 6 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sim-08-plainte-adherent",
+      "number": 8,
+      "title": "Adhérent et plainte non traitée",
+      "category": "members",
+      "estimatedMinutes": 10,
+      "regulatoryValidationRequired": true,
+      "interactionModel": "step_by_step",
+      "scenarioNote": "L’identité, la plainte et les échanges de ce scénario sont fictifs. Les règles de conservation et de traitement doivent être validées avant production.",
+      "questions": [
+        {
+          "id": "q1-rechercher-dossier",
+          "order": 1,
+          "type": "single_choice",
+          "criterionId": "case_search",
+          "prompt": "Un adhérent affirme que sa plainte n’a jamais été traitée. Que recherchez-vous en premier ?",
+          "options": [
+            {
+              "id": "q1-best",
+              "label": "Je retrouve son identité ou la référence du dossier, la plainte et les réponses ou actions déjà enregistrées.",
+              "actionIds": ["find_identity_reference", "find_complaint", "find_existing_actions"],
+              "isRecommended": true,
+              "feedback": "Bonne recherche : elle permet de travailler sur le bon dossier et de connaître ce qui a déjà été fait."
+            },
+            {
+              "id": "q1-two-items",
+              "label": "Je retrouve la plainte et les réponses déjà enregistrées, mais je ne vérifie pas encore la référence du dossier.",
+              "actionIds": ["find_complaint", "find_existing_actions"],
+              "feedback": "Deux éléments sont retrouvés, mais l’identité ou la référence doit être vérifiée pour éviter une confusion de dossier."
+            },
+            {
+              "id": "q1-ask-again",
+              "label": "Je demande à l’adhérent de raconter toute l’histoire avant de rechercher quoi que ce soit.",
+              "actionIds": [],
+              "feedback": "Il faut d’abord rechercher les traces existantes afin de ne pas faire répéter inutilement l’adhérent."
+            }
+          ]
+        },
+        {
+          "id": "q2-reconstituer-chronologie",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "timeline",
+          "prompt": "Comment vérifier si la plainte a réellement été traitée ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "Je retrouve la date de réception, je reconstitue les étapes de traitement et je signale tout retard ou manque d’information.",
+              "actionIds": ["find_received_date", "reconstruct_processing", "flag_delay"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : la situation est vérifiée à partir d’une chronologie complète."
+            },
+            {
+              "id": "q2-two-actions",
+              "label": "Je retrouve la date de réception et les étapes de traitement, mais je ne signale pas encore le retard.",
+              "actionIds": ["find_received_date", "reconstruct_processing"],
+              "feedback": "La chronologie est reconstituée, mais un retard ou un manque d’information doit être explicitement signalé."
+            },
+            {
+              "id": "q2-status-only",
+              "label": "Je regarde uniquement si le dossier porte le statut « fermé ».",
+              "actionIds": [],
+              "feedback": "Un statut ne suffit pas : il faut vérifier les dates, les actions réalisées et les preuves de réponse."
+            }
+          ]
+        },
+        {
+          "id": "q3-repondre-adherent",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "response",
+          "prompt": "Quelle réponse donner à l’adhérent après la première vérification ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "Je reconnais la situation, je donne uniquement les faits vérifiés et j’explique la prochaine étape.",
+              "actionIds": ["acknowledge", "give_factual_response", "propose_next_step"],
+              "isRecommended": true,
+              "feedback": "Bonne réponse : elle est respectueuse, factuelle et donne une suite concrète."
+            },
+            {
+              "id": "q3-two-actions",
+              "label": "Je reconnais la situation et je donne les faits vérifiés, mais je ne précise pas la prochaine étape.",
+              "actionIds": ["acknowledge", "give_factual_response"],
+              "feedback": "La réponse est honnête, mais l’adhérent doit savoir ce qui va se passer ensuite."
+            },
+            {
+              "id": "q3-promise",
+              "label": "Je promets que le remboursement sera effectué rapidement, même si je n’ai pas vérifié le dossier.",
+              "actionIds": [],
+              "feedback": "Il ne faut pas promettre un résultat non vérifié. Présentez les faits et la prochaine action possible."
+            }
+          ]
+        },
+        {
+          "id": "q4-confidentialite",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "privacy",
+          "prompt": "Un proche de l’adhérent demande des détails sur la plainte. Que faites-vous ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je vérifie l’identité et l’autorisation de l’interlocuteur, je ne divulgue pas de données à un tiers et j’utilise le canal approprié.",
+              "actionIds": ["verify_identity", "protect_personal_data", "use_appropriate_channel"],
+              "isRecommended": true,
+              "feedback": "Bonne pratique : l’identité, la confidentialité et le canal de communication sont contrôlés."
+            },
+            {
+              "id": "q4-two-actions",
+              "label": "Je vérifie l’identité et j’utilise le canal approprié, mais je donne quand même les détails pour aider la famille.",
+              "actionIds": ["verify_identity", "use_appropriate_channel"],
+              "feedback": "L’identité et le canal sont contrôlés, mais les détails ne doivent pas être transmis sans autorisation."
+            },
+            {
+              "id": "q4-disclose",
+              "label": "Je donne les informations puisque la personne affirme être un membre de la famille.",
+              "actionIds": [],
+              "criticalErrorId": "privacy_breach",
+              "feedback": "Erreur critique : une relation familiale déclarée ne suffit pas pour autoriser la divulgation de données personnelles."
+            }
+          ]
+        },
+        {
+          "id": "q5-suivi-plainte",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "followup",
+          "prompt": "Comment assurer le suivi de la plainte après l’échange ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "Je nomme un responsable, je fixe une échéance de réponse et j’enregistre la clôture ou la relance.",
+              "actionIds": ["name_owner", "set_response_deadline", "record_closure"],
+              "isRecommended": true,
+              "feedback": "Bonne organisation : la plainte a un responsable, une date et une trace de son aboutissement."
+            },
+            {
+              "id": "q5-two-actions",
+              "label": "Je nomme un responsable et je fixe une échéance, mais je ne prévois pas de trace de clôture.",
+              "actionIds": ["name_owner", "set_response_deadline"],
+              "feedback": "Le suivi est organisé, mais sa clôture ou sa relance doit être enregistrée."
+            },
+            {
+              "id": "q5-verbal",
+              "label": "Je demande à l’équipe de garder la plainte en tête et de me prévenir si elle revient.",
+              "actionIds": [],
+              "feedback": "Une plainte doit être suivie avec un responsable, une échéance et une trace formelle."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "case_search",
+          "label": "Recherche du dossier",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "find_identity_reference", "label": "Retrouver l’identité ou référence du dossier", "points": 6 },
+            { "id": "find_complaint", "label": "Retrouver la plainte", "points": 7 },
+            { "id": "find_existing_actions", "label": "Retrouver les réponses ou actions déjà réalisées", "points": 7 }
+          ]
+        },
+        {
+          "id": "timeline",
+          "label": "Chronologie",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "find_received_date", "label": "Reconstituer la date de réception", "points": 6 },
+            { "id": "reconstruct_processing", "label": "Reconstituer les étapes de traitement", "points": 7 },
+            { "id": "flag_delay", "label": "Signaler le retard ou le manque d’information", "points": 7 }
+          ]
+        },
+        {
+          "id": "response",
+          "label": "Réponse",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "acknowledge", "label": "Accuser réception ou reconnaître la situation", "points": 7 },
+            { "id": "give_factual_response", "label": "Donner une réponse compréhensible et factuelle", "points": 7 },
+            { "id": "propose_next_step", "label": "Proposer la prochaine étape", "points": 6 }
+          ]
+        },
+        {
+          "id": "privacy",
+          "label": "Confidentialité",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "verify_identity", "label": "Vérifier l’identité de l’interlocuteur", "points": 7 },
+            { "id": "protect_personal_data", "label": "Ne pas divulguer d’information à un tiers", "points": 7, "criticalErrorId": "privacy_breach" },
+            { "id": "use_appropriate_channel", "label": "Utiliser le canal approprié", "points": 6 }
+          ]
+        },
+        {
+          "id": "followup",
+          "label": "Suivi",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "name_owner", "label": "Nommer un responsable", "points": 6 },
+            { "id": "set_response_deadline", "label": "Fixer une échéance de réponse", "points": 7 },
+            { "id": "record_closure", "label": "Enregistrer la clôture ou la relance", "points": 7 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sim-09-mesure-conservatoire",
+      "number": 9,
+      "title": "Mesure conservatoire et escalade",
+      "category": "risk_management",
+      "estimatedMinutes": 12,
+      "regulatoryValidationRequired": true,
+      "validationNote": "Les conséquences et la terminologie de ce scénario doivent être validées avant publication.",
+      "interactionModel": "step_by_step",
+      "scenarioNote": "Ce scénario est un exercice de réaction et d’escalade. Il ne constitue pas une procédure officielle ni une instruction de mesure conservatoire.",
+      "questions": [
+        {
+          "id": "q1-signal-risque",
+          "order": 1,
+          "type": "single_choice",
+          "criterionId": "risk_signal",
+          "prompt": "Un signal important apparaît dans le fonctionnement de la mutuelle. Quelle est la première démarche ?",
+          "options": [
+            {
+              "id": "q1-best",
+              "label": "Je repère le signal, je sépare les faits des suppositions et je définis ce qui doit être vérifié.",
+              "actionIds": ["identify_signal", "separate_facts_assumptions", "identify_verification"],
+              "isRecommended": true,
+              "feedback": "Bonne démarche : le risque est pris au sérieux sans transformer une hypothèse en conclusion."
+            },
+            {
+              "id": "q1-two-actions",
+              "label": "Je repère le signal et je définis ce qui doit être vérifié, mais je mélange encore les faits et les suppositions.",
+              "actionIds": ["identify_signal", "identify_verification"],
+              "feedback": "Le signal et la vérification sont identifiés. Il faut aussi séparer clairement ce qui est constaté de ce qui est supposé."
+            },
+            {
+              "id": "q1-rumor",
+              "label": "Je considère immédiatement que le signal prouve une faute grave.",
+              "actionIds": [],
+              "feedback": "Un signal doit déclencher une vérification ; il ne suffit pas à prouver une faute ou une conclusion définitive."
+            }
+          ]
+        },
+        {
+          "id": "q2-limites-role",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "role_boundary",
+          "prompt": "Vous n’avez pas le pouvoir de décider seul d’une mesure sensible. Que faites-vous ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "Je prends les précautions autorisées immédiatement, je reconnais ce qui nécessite une décision supérieure et je reste dans mon rôle.",
+              "actionIds": ["identify_immediate_action", "recognize_escalation_need", "stay_within_authority"],
+              "isRecommended": true,
+              "feedback": "Bonne réaction : l’urgence est prise en compte sans décision hors compétence."
+            },
+            {
+              "id": "q2-two-actions",
+              "label": "Je reconnais qu’une décision supérieure est nécessaire et je reste dans mon rôle, mais je ne précise pas la précaution immédiate autorisée.",
+              "actionIds": ["recognize_escalation_need", "stay_within_authority"],
+              "feedback": "La limite de rôle est comprise. Il faut aussi identifier ce qui peut être fait immédiatement et légalement dans le scénario."
+            },
+            {
+              "id": "q2-decide-alone",
+              "label": "Je prends seul la mesure la plus forte afin de ne pas perdre de temps.",
+              "actionIds": [],
+              "criticalErrorId": "exceed_role",
+              "feedback": "Erreur critique : une décision sensible ne doit pas être prise hors du rôle ou sans validation appropriée."
+            }
+          ]
+        },
+        {
+          "id": "q3-escalade",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "escalation",
+          "prompt": "Comment transmettre l’alerte à la direction ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "Je préviens la bonne personne, je transmets les faits essentiels et j’indique clairement le niveau d’urgence.",
+              "actionIds": ["notify_right_person", "send_key_facts", "state_urgency"],
+              "isRecommended": true,
+              "feedback": "Bonne escalade : elle est adressée au bon décideur et permet une réaction proportionnée."
+            },
+            {
+              "id": "q3-two-actions",
+              "label": "Je préviens la direction et j’indique que la situation est urgente, mais je ne rassemble pas encore les faits essentiels.",
+              "actionIds": ["notify_right_person", "state_urgency"],
+              "feedback": "La direction est alertée, mais elle a besoin des faits essentiels pour comprendre et décider."
+            },
+            {
+              "id": "q3-team-message",
+              "label": "J’envoie un message général à toute l’équipe en demandant à chacun de réagir.",
+              "actionIds": [],
+              "feedback": "Une alerte sensible doit être adressée au responsable approprié, avec des faits vérifiables et un niveau d’urgence."
+            }
+          ]
+        },
+        {
+          "id": "q4-preparer-faits",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "fact_preparation",
+          "prompt": "Quels éléments préparer avant la décision du responsable ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je rassemble les documents utiles, je date les informations et je distingue les originaux, copies et éléments non vérifiés.",
+              "actionIds": ["gather_documents", "date_information", "classify_evidence"],
+              "isRecommended": true,
+              "feedback": "Bonne préparation : le décideur reçoit des éléments organisés, datés et clairement qualifiés."
+            },
+            {
+              "id": "q4-two-actions",
+              "label": "Je rassemble les documents et je les date, mais je ne distingue pas les éléments vérifiés des informations non confirmées.",
+              "actionIds": ["gather_documents", "date_information"],
+              "feedback": "Les documents sont préparés, mais leur niveau de vérification doit être clairement indiqué."
+            },
+            {
+              "id": "q4-opinion",
+              "label": "Je prépare surtout mon opinion personnelle sur ce qui s’est passé.",
+              "actionIds": [],
+              "feedback": "La décision doit s’appuyer sur des faits, des dates et des pièces, pas principalement sur une opinion."
+            }
+          ]
+        },
+        {
+          "id": "q5-tracabilite-alerte",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "escalation_trace",
+          "prompt": "Comment assurer le suivi après l’escalade ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "Je note l’heure et le destinataire de l’alerte, j’enregistre la décision reçue et je planifie le suivi.",
+              "actionIds": ["record_alert", "record_decision", "schedule_followup"],
+              "isRecommended": true,
+              "feedback": "Bonne traçabilité : l’alerte, la décision et la suite sont toutes documentées."
+            },
+            {
+              "id": "q5-two-actions",
+              "label": "Je note l’alerte et la décision reçue, mais je ne planifie pas de suivi.",
+              "actionIds": ["record_alert", "record_decision"],
+              "feedback": "La décision est tracée, mais un suivi doit être planifié pour vérifier sa mise en œuvre."
+            },
+            {
+              "id": "q5-verbal",
+              "label": "Je considère que l’affaire est terminée dès que j’ai parlé à la direction.",
+              "actionIds": [],
+              "feedback": "Une conversation ne suffit pas : l’alerte, la décision et le suivi doivent être conservés."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "risk_signal",
+          "label": "Signal de risque",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "identify_signal", "label": "Repérer le signal important", "points": 8 },
+            { "id": "separate_facts_assumptions", "label": "Séparer les faits des suppositions", "points": 6 },
+            { "id": "identify_verification", "label": "Mesurer ce qui doit être vérifié", "points": 6 }
+          ]
+        },
+        {
+          "id": "role_boundary",
+          "label": "Périmètre de rôle",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "identify_immediate_action", "label": "Identifier ce qui peut être fait immédiatement", "points": 7 },
+            { "id": "recognize_escalation_need", "label": "Reconnaître ce qui nécessite une décision supérieure", "points": 7 },
+            { "id": "stay_within_authority", "label": "Ne pas outrepasser son autorité", "points": 6, "criticalErrorId": "exceed_role" }
+          ]
+        },
+        {
+          "id": "escalation",
+          "label": "Escalade",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "notify_right_person", "label": "Prévenir la bonne personne", "points": 8 },
+            { "id": "send_key_facts", "label": "Transmettre les faits essentiels", "points": 6 },
+            { "id": "state_urgency", "label": "Indiquer le niveau d’urgence", "points": 6 }
+          ]
+        },
+        {
+          "id": "fact_preparation",
+          "label": "Préparation des faits",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "gather_documents", "label": "Rassembler les documents utiles", "points": 7 },
+            { "id": "date_information", "label": "Dater les informations", "points": 6 },
+            { "id": "classify_evidence", "label": "Distinguer original, copie et information non vérifiée", "points": 7 }
+          ]
+        },
+        {
+          "id": "escalation_trace",
+          "label": "Traçabilité",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "record_alert", "label": "Noter l’heure et le destinataire de l’alerte", "points": 7 },
+            { "id": "record_decision", "label": "Enregistrer la décision reçue", "points": 7 },
+            { "id": "schedule_followup", "label": "Planifier le suivi", "points": 6 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sim-10-cloture-plan-suivi",
+      "number": 10,
+      "title": "Clôture du contrôle et plan de suivi",
+      "category": "remediation",
+      "estimatedMinutes": 12,
+      "regulatoryValidationRequired": true,
+      "interactionModel": "step_by_step",
+      "scenarioNote": "Les recommandations et échéances de ce scénario sont fictives et doivent être alignées sur les formulations officiellement validées.",
+      "questions": [
+        {
+          "id": "q1-reformuler-recommandations",
+          "order": 1,
+          "type": "single_choice",
+          "criterionId": "recommendation_restatement",
+          "prompt": "Le contrôle est terminé et le rapport contient plusieurs recommandations. Comment les transformer en actions compréhensibles ?",
+          "options": [
+            {
+              "id": "q1-best",
+              "label": "Je reformule chaque recommandation sans la déformer, je demande une clarification si nécessaire et je distingue une recommandation d’une décision.",
+              "actionIds": ["restate_recommendations", "request_clarification", "separate_recommendation_decision"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : les recommandations sont comprises sans être modifiées et les ambiguïtés sont traitées."
+            },
+            {
+              "id": "q1-two-actions",
+              "label": "Je reformule les recommandations et je distingue les décisions, mais je ne demande pas de clarification sur les points ambigus.",
+              "actionIds": ["restate_recommendations", "separate_recommendation_decision"],
+              "feedback": "La reformulation est utile, mais une ambiguïté doit être clarifiée avant de créer une action."
+            },
+            {
+              "id": "q1-promise",
+              "label": "Je remplace les recommandations par une promesse générale d’amélioration.",
+              "actionIds": [],
+              "feedback": "Une promesse générale ne permet pas de comprendre, attribuer et suivre les actions demandées."
+            }
+          ]
+        },
+        {
+          "id": "q2-prioriser-plan",
+          "order": 2,
+          "type": "single_choice",
+          "criterionId": "risk_priority",
+          "prompt": "Comment organiser l’ordre de traitement des actions ?",
+          "options": [
+            {
+              "id": "q2-best",
+              "label": "Je classe les actions par risque et par urgence, puis j’identifie les dépendances entre elles.",
+              "actionIds": ["rank_by_risk", "rank_by_urgency", "identify_dependencies"],
+              "isRecommended": true,
+              "feedback": "Bonne organisation : elle permet de traiter les risques importants et de tenir compte de l’ordre réel des tâches."
+            },
+            {
+              "id": "q2-two-actions",
+              "label": "Je classe les actions par risque et urgence, mais je ne vérifie pas leurs dépendances.",
+              "actionIds": ["rank_by_risk", "rank_by_urgency"],
+              "feedback": "Les priorités sont définies, mais une action peut dépendre d’une autre et modifier le calendrier."
+            },
+            {
+              "id": "q2-easy-first",
+              "label": "Je commence par les actions les plus faciles pour montrer rapidement des progrès.",
+              "actionIds": [],
+              "feedback": "La facilité ne doit pas remplacer la priorisation par risque, urgence et dépendances."
+            }
+          ]
+        },
+        {
+          "id": "q3-attribuer-actions",
+          "order": 3,
+          "type": "single_choice",
+          "criterionId": "owners",
+          "prompt": "Comment rendre chaque action réellement suivie ?",
+          "options": [
+            {
+              "id": "q3-best",
+              "label": "J’attribue un responsable opérationnel, je désigne un responsable de suivi et j’obtiens l’accord des personnes concernées.",
+              "actionIds": ["assign_operational_owner", "assign_followup_owner", "obtain_owner_agreement"],
+              "isRecommended": true,
+              "feedback": "Bonne attribution : l’action est réalisée par la bonne personne et suivie par un responsable identifié."
+            },
+            {
+              "id": "q3-two-actions",
+              "label": "J’attribue les actions et je désigne un responsable de suivi, mais je ne vérifie pas l’accord des personnes concernées.",
+              "actionIds": ["assign_operational_owner", "assign_followup_owner"],
+              "feedback": "Les responsabilités sont posées, mais leur accord est important pour éviter un plan impossible à exécuter."
+            },
+            {
+              "id": "q3-team",
+              "label": "J’attribue toutes les actions à l’équipe administrative dans son ensemble.",
+              "actionIds": [],
+              "feedback": "Une équipe entière ne constitue pas un responsable suffisamment précis pour un suivi rigoureux."
+            }
+          ]
+        },
+        {
+          "id": "q4-preuves-echeances",
+          "order": 4,
+          "type": "single_choice",
+          "criterionId": "evidence_deadlines",
+          "prompt": "Que faut-il définir pour vérifier qu’une action est réellement terminée ?",
+          "options": [
+            {
+              "id": "q4-best",
+              "label": "Je définis la preuve attendue, je fixe une échéance réaliste et je programme une alerte avant cette échéance.",
+              "actionIds": ["define_expected_evidence", "set_realistic_deadline", "schedule_reminder"],
+              "isRecommended": true,
+              "feedback": "Bonne méthode : chaque action devient vérifiable, datée et suivie avant son échéance."
+            },
+            {
+              "id": "q4-two-actions",
+              "label": "Je définis la preuve et une échéance, mais je ne prévois pas d’alerte de suivi.",
+              "actionIds": ["define_expected_evidence", "set_realistic_deadline"],
+              "feedback": "La base est bonne, mais une alerte réduit le risque d’oublier l’échéance."
+            },
+            {
+              "id": "q4-vague-date",
+              "label": "Je demande que les actions soient faites rapidement, sans fixer de date précise.",
+              "actionIds": [],
+              "feedback": "Une formulation vague ne permet pas de mesurer l’avancement ni le retard."
+            }
+          ]
+        },
+        {
+          "id": "q5-revue-direction",
+          "order": 5,
+          "type": "single_choice",
+          "criterionId": "management_review",
+          "prompt": "Comment préparer le suivi avec la direction ?",
+          "options": [
+            {
+              "id": "q5-best",
+              "label": "Je prépare une synthèse courte, je présente les actions en retard ou à risque et je programme la prochaine revue.",
+              "actionIds": ["prepare_summary", "highlight_late_risky", "schedule_next_review"],
+              "isRecommended": true,
+              "feedback": "Bonne revue : la direction voit l’essentiel, les risques et la prochaine date de décision."
+            },
+            {
+              "id": "q5-two-actions",
+              "label": "Je prépare une synthèse et je présente les actions à risque, mais je ne programme pas la prochaine revue.",
+              "actionIds": ["prepare_summary", "highlight_late_risky"],
+              "feedback": "La situation est présentée, mais une date de revue est nécessaire pour maintenir le suivi."
+            },
+            {
+              "id": "q5-all-details",
+              "label": "Je transmets toutes les pièces sans synthèse et j’attends que la direction revienne vers moi.",
+              "actionIds": [],
+              "feedback": "La direction a besoin d’une synthèse courte, des risques prioritaires et d’une prochaine date de revue."
+            }
+          ]
+        }
+      ],
+      "criteria": [
+        {
+          "id": "recommendation_restatement",
+          "label": "Reformulation",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "restate_recommendations", "label": "Reformuler chaque recommandation sans la déformer", "points": 8 },
+            { "id": "request_clarification", "label": "Demander une clarification si nécessaire", "points": 6 },
+            { "id": "separate_recommendation_decision", "label": "Distinguer recommandation et décision", "points": 6 }
+          ]
+        },
+        {
+          "id": "risk_priority",
+          "label": "Priorité",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "rank_by_risk", "label": "Classer les actions par risque", "points": 7 },
+            { "id": "rank_by_urgency", "label": "Classer les actions par urgence", "points": 7 },
+            { "id": "identify_dependencies", "label": "Identifier les dépendances", "points": 6 }
+          ]
+        },
+        {
+          "id": "owners",
+          "label": "Responsables",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "assign_operational_owner", "label": "Attribuer un responsable opérationnel", "points": 7 },
+            { "id": "assign_followup_owner", "label": "Désigner un responsable de suivi", "points": 6 },
+            { "id": "obtain_owner_agreement", "label": "Obtenir l’accord des personnes concernées", "points": 7 }
+          ]
+        },
+        {
+          "id": "evidence_deadlines",
+          "label": "Preuves et échéances",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "define_expected_evidence", "label": "Définir la preuve attendue", "points": 7 },
+            { "id": "set_realistic_deadline", "label": "Fixer une échéance réaliste", "points": 7 },
+            { "id": "schedule_reminder", "label": "Prévoir une alerte avant l’échéance", "points": 6 }
+          ]
+        },
+        {
+          "id": "management_review",
+          "label": "Revue direction",
+          "maxPoints": 20,
+          "actions": [
+            { "id": "prepare_summary", "label": "Préparer une synthèse courte", "points": 7 },
+            { "id": "highlight_late_risky", "label": "Présenter les actions en retard ou à risque", "points": 7 },
+            { "id": "schedule_next_review", "label": "Programmer la prochaine revue", "points": 6 }
+          ]
+        }
+      ]
+    }
+  ]
+}
