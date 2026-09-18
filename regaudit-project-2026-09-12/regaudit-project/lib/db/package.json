@@ -8,15 +8,18 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "generate": "drizzle-kit generate",
-    "push": "drizzle-kit push"
+    "push": "drizzle-kit push",
+    "migrate:http": "tsx src/migrate-http.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "drizzle-orm": "catalog:",
     "postgres": "^3.4.5"
   },
   "devDependencies": {
     "@types/node": "catalog:",
     "drizzle-kit": "^0.31.5",
+    "tsx": "catalog:",
     "typescript": "~5.9.3"
   }
 }
