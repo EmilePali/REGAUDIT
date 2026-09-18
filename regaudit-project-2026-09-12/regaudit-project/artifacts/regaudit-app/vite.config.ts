@@ -27,6 +27,14 @@ if (!basePath) {
   );
 }
 
+const apiServerPort = process.env.API_SERVER_PORT;
+
+if (!apiServerPort) {
+  throw new Error(
+    'API_SERVER_PORT environment variable is required but was not provided.',
+  );
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [
@@ -71,6 +79,20 @@ export default defineConfig({
     allowedHosts: true,
     fs: {
       strict: true,
+    },
+    proxy: {
+      // changeOrigin: false keeps the browser's original Host header
+      // (e.g. armp.localhost:PORT) so the API's subdomain-based tenant
+      // resolution (see artifacts/api-server) works the same in dev as
+      // it will once the frontend and API share a domain in production.
+      '/api': {
+        target: `http://127.0.0.1:${apiServerPort}`,
+        changeOrigin: false,
+      },
+      '/c': {
+        target: `http://127.0.0.1:${apiServerPort}`,
+        changeOrigin: false,
+      },
     },
   },
   preview: {
