@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
-import { startTrial, extendTrial, type SubscriptionRecord } from '@workspace/billing';
+import { computeAccessState, startTrial, extendTrial, type SubscriptionRecord } from '@workspace/billing';
 import { assertProvisionableSubdomain } from '@workspace/tenancy';
 import { db, subscriptions, tenants } from '@workspace/db';
 import { requireSuperAdmin } from '../middleware/require-super-admin';
@@ -9,6 +9,33 @@ import { requireSuperAdmin } from '../middleware/require-super-admin';
 export const tenantsRouter = Router();
 
 tenantsRouter.use(requireSuperAdmin);
+
+/** List every provisioned tenant with its current access state, for the APEX SKY admin console. */
+tenantsRouter.get('/', async (_req, res) => {
+  const rows = await db
+    .select({ tenant: tenants, subscription: subscriptions })
+    .from(tenants)
+    .leftJoin(subscriptions, eq(subscriptions.tenantId, tenants.id))
+    .orderBy(tenants.createdAt);
+
+  const withAccess = rows.map(({ tenant, subscription }) => {
+    if (!subscription) {
+      return { tenant, subscription: null, access: null };
+    }
+    const record: SubscriptionRecord = {
+      plan: subscription.plan,
+      status: subscription.status === 'canceled' ? 'canceled' : 'not_canceled',
+      trialStartedAt: subscription.trialStartedAt,
+      trialEndsAt: subscription.trialEndsAt,
+      extendedTrialUntil: subscription.extendedTrialUntil,
+      currentPeriodStart: subscription.currentPeriodStart,
+      currentPeriodEnd: subscription.currentPeriodEnd,
+    };
+    return { tenant, subscription, access: computeAccessState(record) };
+  });
+
+  res.json({ tenants: withAccess });
+});
 
 const createTenantSchema = z.object({
   name: z.string().min(2).max(200),

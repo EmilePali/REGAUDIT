@@ -50,8 +50,9 @@ Two audiences: (1) trainees at regulated institutions learn AIRMS-style audit re
 
 ## Gotchas
 
-- `artifacts/regaudit-app/src/App.tsx` still renders the original Replit Agent placeholder ("Replit Agent is building...") — no product screens exist yet, including for anything in this addendum. The backend is ahead of the frontend.
-- This sandbox has no live Postgres — `lib/db`'s schema/client are typechecked and unit-tested where possible (`lib/billing`, `lib/tenancy`), but never run against a real database. Run `pnpm --filter @workspace/db run push` against a real `DATABASE_URL` before trusting the schema end-to-end.
+- `artifacts/regaudit-app` now has two real screens: `/admin` (tenant provisioning console) and `/` (tenant-branded landing, reads `/api/tenant/me`). Everything else from the original cahier des charges (modules, quiz, simulations, checkout) is still unbuilt.
+- This sandbox has no live Postgres — `lib/db`'s schema/client are typechecked and unit-tested where possible (`lib/billing`, `lib/tenancy`), but never run against a real database. Run `pnpm --filter @workspace/db run push` against a real `DATABASE_URL` before trusting the schema end-to-end. The frontend/API were smoke-tested in a real browser with the DB unreachable (source-material/RegAudit-contact-to-revenue-addendum.md §6) - it fails cleanly rather than hanging, but nothing was verified against real data.
+- Vite dev proxy (`vite.config.ts`) forwards `/api` and `/c` to `API_SERVER_PORT` with `changeOrigin: false` specifically to preserve the Host header, because tenant resolution is Host-based (`lib/tenancy`'s `parseSubdomainFromHost`). Don't add `changeOrigin: true` or a `X-Forwarded-Host`-blind reverse proxy in production without adjusting that middleware - it would break subdomain resolution.
 - `regaudit-app` and `attached_assets/` used to live at the repo root; they were moved to `artifacts/regaudit-app/` and root `attached_assets/` respectively because `tsconfig.json`, `pnpm-workspace.yaml`, and `vite.config.ts`'s `@assets` alias all already assumed that layout — the previous location silently broke `pnpm install` and `pnpm run typecheck`.
 
 ## Pointers

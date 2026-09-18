@@ -1,7 +1,8 @@
-import express, { type Express } from 'express';
+import express, { type Express, type NextFunction, type Request, type Response } from 'express';
 import { resolveTenant } from './middleware/tenant';
 import { billingRouter } from './routes/billing';
 import { leadsRouter } from './routes/leads';
+import { tenantMeRouter } from './routes/tenant-me';
 import { tenantsRouter } from './routes/tenants';
 import { verifyRouter } from './routes/verify';
 
@@ -22,10 +23,18 @@ export function createApp(): Express {
   // Public - no tenant/subscription gate.
   app.use('/c', verifyRouter);
   app.use('/api/billing', billingRouter);
+  app.use('/api/tenant/me', tenantMeRouter);
 
   // super_admin-only ops surfaces.
   app.use('/api/tenants', tenantsRouter);
   app.use('/api/leads', leadsRouter);
+
+  // Express 5 forwards rejected promises from async handlers here automatically.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+    console.error(err);
+    res.status(500).json({ error: 'internal_error' });
+  });
 
   return app;
 }
